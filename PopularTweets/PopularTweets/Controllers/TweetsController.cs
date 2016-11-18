@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PopularTweets.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,32 +8,34 @@ using System.Web.Http;
 
 namespace PopularTweets.Controllers
 {
-    [Authorize]
-    public class ValuesController : ApiController
+    public class TweetsController : ApiController
     {
-        // GET api/values
+        // GET: api/Tweets
         public IEnumerable<string> Get()
         {
+
+            TwitterService service = new TwitterService();
+            service.GetTwitterTimelineViaScreenName("test");
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
+        // GET: api/Tweets/5
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/values
+        // POST: api/Tweets
         public void Post([FromBody]string value)
         {
         }
 
-        // PUT api/values/5
+        // PUT: api/Tweets/5
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/values/5
+        // DELETE: api/Tweets/5
         public void Delete(int id)
         {
         }
