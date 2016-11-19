@@ -1,4 +1,6 @@
-﻿using PopularTweets.Helpers;
+﻿using Newtonsoft.Json.Linq;
+using PopularTweets.Helpers;
+using PopularTweets.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,11 +12,20 @@ namespace PopularTweets.Services
 {
     public class TwitterService
     {
-        public bool GetTwitterTimelineViaScreenName(string screenName) {
+        const int TWEET_LIMIT = 2;
+        public List<TweetModel> tweets;
+
+        public TwitterService()
+        {
+            tweets = new List<TweetModel>();
+        }
+
+        public bool GetTwitterTimelineViaScreenName(string screenName, int numberTweets) {
             if (string.IsNullOrEmpty(TwitterSingleton.Instance.accessToken) || string.IsNullOrEmpty(TwitterSingleton.Instance.tokenType))
                 TwitterSingleton.Instance.Authenticate();
 
-            HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=2");
+            string timelineUrl = string.Format("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&count={1}", screenName, TWEET_LIMIT);
+            HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
             var timelineHeaderFormat = "{0} {1}";
             timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, TwitterSingleton.Instance.tokenType, TwitterSingleton.Instance.accessToken));
             timeLineRequest.Method = "Get";
@@ -25,6 +36,14 @@ namespace PopularTweets.Services
                 using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
                 {
                     timeLineJson = reader.ReadToEnd();
+                    dynamic data = JArray.Parse(timeLineJson);
+                    foreach (var tweet in data)
+                    {
+                        TweetModel temp = new TweetModel();
+                        temp.TweetID = tweet.id_str;
+                        temp.TweetURL = string.Format("https://twitter.com/{0}/status/{1}", screenName, temp.TweetID);
+                        tweets.Add(temp);
+                    }
                 }
             }
             GetOembed();

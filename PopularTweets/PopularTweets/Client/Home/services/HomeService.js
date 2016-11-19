@@ -1,11 +1,13 @@
 ﻿angular.module('PopularTweetsApp.Home.Services', []).
   service('homeApiService', function ($http) {
 
-      this.GetTwitterTimelineViaScreenName = function () {
+      this.GetTwitterTimelineViaScreenName = function (screenName, numberTweets) {
           return $http({
               method: 'GET',
-              url: 'api/Tweets',
-              contentType: "application/json"
+              url: 'api/Tweets/GetTweets',
+              contentType: "application/json",
+              //data: { screenName: screenName, numberTweets: numberTweets }
+              params: { screenName: screenName, numberTweets : numberTweets }
           }).success(function (data) {
               return true;
           }).error(function () {

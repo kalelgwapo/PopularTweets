@@ -4,7 +4,7 @@
             <form>
                 <div class="form-group">
                     <label for="twitterHandle">User</label>
-                    <input type="text" class="form-control" id="twitterHandle" placeholder="@twitter handle here" ng-model="twitterHandle">
+                    <input type="text" class="form-control" id="twitterHandle" placeholder="@twitter handle here" ng-model="screenName">
                 </div>
                 <div class="form-group">
                     <select class="form-control" id="selectNumber" ng-model="numberTweets">
@@ -16,7 +16,7 @@
                         <option>5</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Go <i class="glyphicon glyphicon-arrow-right"></i></button>
+                <button type="submit" class="btn btn-primary" ng-click="getTweets()">Go <i class="glyphicon glyphicon-arrow-right"></i></button>
             </form>
         </div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">

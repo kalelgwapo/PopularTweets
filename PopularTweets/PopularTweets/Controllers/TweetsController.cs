@@ -1,4 +1,5 @@
-﻿using PopularTweets.Services;
+﻿using Newtonsoft.Json.Linq;
+using PopularTweets.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,15 +14,18 @@ namespace PopularTweets.Controllers
         // GET: api/Tweets
         public IEnumerable<string> Get()
         {
-
-            TwitterService service = new TwitterService();
-            service.GetTwitterTimelineViaScreenName("test");
             return new string[] { "value1", "value2" };
         }
 
         // GET: api/Tweets/5
-        public string Get(int id)
+        [HttpGet]
+        [Route("api/Tweets/GetTweets")]
+        public string GetTweets(string screenName, int numberTweets)
         {
+            //string screenName = data["screenName"].ToObject<string>();
+            //int numberTweets = data["numberTweets"].ToObject<int>();
+            TwitterService service = new TwitterService();
+            service.GetTwitterTimelineViaScreenName(screenName, numberTweets);
             return "value";
         }
 

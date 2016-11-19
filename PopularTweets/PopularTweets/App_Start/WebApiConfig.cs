@@ -25,6 +25,11 @@ namespace PopularTweets
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            config.Routes.MapHttpRoute(
+            name: "GetTweets",
+            routeTemplate: "api/{controller}/{action}/",
+            defaults: new { action = "GetTweets" });
         }
     }
 }
