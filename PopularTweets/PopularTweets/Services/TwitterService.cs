@@ -20,7 +20,7 @@ namespace PopularTweets.Services
             tweets = new List<TweetModel>();
         }
 
-        public bool GetTwitterTimelineViaScreenName(string screenName, int numberTweets) {
+        public List<TweetModel> GetTwitterTimelineViaScreenName(string screenName, int numberTweets) {
             if (string.IsNullOrEmpty(TwitterSingleton.Instance.accessToken) || string.IsNullOrEmpty(TwitterSingleton.Instance.tokenType))
                 TwitterSingleton.Instance.Authenticate();
 
@@ -46,24 +46,57 @@ namespace PopularTweets.Services
                     }
                 }
             }
+            GetFavouriteRetweetCount();
             GetOembed();
-            return true;
+            return tweets;
         }
 
-        public bool GetOembed() {
-            HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create("https://publish.twitter.com/oembed?url=https%3A%2F%2Ftwitter.com%2FInterior%2Fstatus%2F507185938620219395");
-            timeLineRequest.Method = "Get";
-            WebResponse timeLineResponse = timeLineRequest.GetResponse();
-            var timeLineJson = string.Empty;
-            using (timeLineResponse)
+        public void GetOembed() {
+            foreach (TweetModel tweet in tweets)
             {
-                using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                string tempUrl = string.Format("https://publish.twitter.com/oembed?url={0}",tweet.TweetURL);
+                HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(tempUrl);
+                timeLineRequest.Method = "Get";
+                WebResponse timeLineResponse = timeLineRequest.GetResponse();
+                var timeLineJson = string.Empty;
+                using (timeLineResponse)
                 {
-                    timeLineJson = reader.ReadToEnd();
+                    using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                    {
+                        timeLineJson = reader.ReadToEnd();
+                        dynamic data = JObject.Parse(timeLineJson);
+                        tweet.EmbedHtml = data.html;
+                    }
                 }
+
+            }
+            
+        }
+
+        public void GetFavouriteRetweetCount()
+        {
+            foreach (TweetModel tweet in tweets)
+            {
+                string tempUrl = string.Format("https://api.twitter.com/1.1/statuses/show/{0}.json", tweet.TweetID);
+                HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(tempUrl);
+                var timelineHeaderFormat = "{0} {1}";
+                timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, TwitterSingleton.Instance.tokenType, TwitterSingleton.Instance.accessToken));
+                timeLineRequest.Method = "Get";
+                WebResponse timeLineResponse = timeLineRequest.GetResponse();
+                var timeLineJson = string.Empty;
+                using (timeLineResponse)
+                {
+                    using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                    {
+                        timeLineJson = reader.ReadToEnd();
+                        dynamic data = JObject.Parse(timeLineJson);
+                        tweet.RetweetCount = data.retweet_count;
+                        tweet.FavouriteCount = data.favorite_count;
+                    }
+                }
+
             }
 
-            return true;
         }
     }
 }

@@ -11,5 +11,6 @@ namespace PopularTweets.Models
         public string TweetURL { get; set; }
         public int RetweetCount { get; set; }
         public int FavouriteCount { get; set; }
+        public string EmbedHtml { get; set; }
     }
 }

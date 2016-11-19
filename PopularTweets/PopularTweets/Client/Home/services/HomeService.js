@@ -6,9 +6,9 @@
               method: 'GET',
               url: 'api/Tweets/GetTweets',
               contentType: "application/json",
-              //data: { screenName: screenName, numberTweets: numberTweets }
               params: { screenName: screenName, numberTweets : numberTweets }
           }).success(function (data) {
+              console.log(data);
               return true;
           }).error(function () {
               return false;
