@@ -4,10 +4,10 @@
             <form>
                 <div class="form-group">
                     <label for="twitterHandle">User</label>
-                    <input type="text" class="form-control" id="twitterHandle" placeholder="@twitter handle here">
+                    <input type="text" class="form-control" id="twitterHandle" placeholder="@twitter handle here" ng-model="twitterHandle">
                 </div>
                 <div class="form-group">
-                    <select class="form-control" id="selectNumber">
+                    <select class="form-control" id="selectNumber" ng-model="numberTweets">
                         <option value="" selected hidden>Number of top tweets to display</option>
                         <option>1</option>
                         <option>2</option>
@@ -20,7 +20,7 @@
             </form>
         </div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
-            &nbsp;
+           <div ng-bind-html="getEmbedHtml"></div>
         </div>
     </div>
 </div>

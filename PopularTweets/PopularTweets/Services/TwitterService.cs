@@ -27,7 +27,23 @@ namespace PopularTweets.Services
                     timeLineJson = reader.ReadToEnd();
                 }
             }
-                
+            GetOembed();
+            return true;
+        }
+
+        public bool GetOembed() {
+            HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create("https://publish.twitter.com/oembed?url=https%3A%2F%2Ftwitter.com%2FInterior%2Fstatus%2F507185938620219395");
+            timeLineRequest.Method = "Get";
+            WebResponse timeLineResponse = timeLineRequest.GetResponse();
+            var timeLineJson = string.Empty;
+            using (timeLineResponse)
+            {
+                using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                {
+                    timeLineJson = reader.ReadToEnd();
+                }
+            }
+
             return true;
         }
     }
