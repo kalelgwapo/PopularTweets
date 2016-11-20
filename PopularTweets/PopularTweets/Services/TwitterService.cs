@@ -12,7 +12,7 @@ namespace PopularTweets.Services
 {
     public class TwitterService
     {
-        const int TWEET_LIMIT = 5;
+        const int TWEET_LIMIT = 3200;
         public List<TweetModel> tweets;
 
         public TwitterService()

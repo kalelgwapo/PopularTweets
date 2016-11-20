@@ -12,13 +12,11 @@ namespace PopularTweets.Controllers
 {
     public class TweetsController : ApiController
     {
-        // GET: api/Tweets
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
-
-        // GET: api/Tweets/5
+        
         [HttpGet]
         [Route("api/Tweets/GetTweets")]
         public HttpResponseMessage GetTweets(string screenName, int numberTweets)
@@ -30,18 +28,15 @@ namespace PopularTweets.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, results);
         }
-
-        // POST: api/Tweets
+        
         public void Post([FromBody]string value)
         {
         }
-
-        // PUT: api/Tweets/5
+        
         public void Put(int id, [FromBody]string value)
         {
         }
-
-        // DELETE: api/Tweets/5
+        
         public void Delete(int id)
         {
         }

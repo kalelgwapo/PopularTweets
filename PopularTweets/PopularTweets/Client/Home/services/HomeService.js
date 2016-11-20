@@ -8,7 +8,6 @@
               contentType: "application/json",
               params: { screenName: screenName, numberTweets : numberTweets }
           }).then(function (response) {
-              console.log(response.data);
               return response.data;
           });
       }

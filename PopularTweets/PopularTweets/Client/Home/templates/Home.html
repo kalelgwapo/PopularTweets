@@ -16,7 +16,8 @@
                         <option>5</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary" ng-click="getTweets()">Go <i class="glyphicon glyphicon-arrow-right"></i></button>
+                <button type="submit" class="btn btn-primary" ng-disabled="loading" ng-click="getTweets()">Go <i class="glyphicon glyphicon-arrow-right"></i></button>
+                <span ng-show="loading">Getting tweets, please wait...</span>
             </form>
         </div>
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
