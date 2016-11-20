@@ -12,5 +12,11 @@ namespace PopularTweets.Models
         public int RetweetCount { get; set; }
         public int FavouriteCount { get; set; }
         public string EmbedHtml { get; set; }
+        public int Score { get; set;          
+        }
+        public void SetScore()
+        {
+            this.Score = this.FavouriteCount + (this.RetweetCount * 2);
+        }
     }
 }

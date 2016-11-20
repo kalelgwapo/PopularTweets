@@ -12,7 +12,7 @@ namespace PopularTweets.Services
 {
     public class TwitterService
     {
-        const int TWEET_LIMIT = 2;
+        const int TWEET_LIMIT = 5;
         public List<TweetModel> tweets;
 
         public TwitterService()
@@ -42,11 +42,12 @@ namespace PopularTweets.Services
                         TweetModel temp = new TweetModel();
                         temp.TweetID = tweet.id_str;
                         temp.TweetURL = string.Format("https://twitter.com/{0}/status/{1}", screenName, temp.TweetID);
+                        temp = GetFavouriteRetweetCount(temp);
                         tweets.Add(temp);
                     }
                 }
             }
-            GetFavouriteRetweetCount();
+            tweets = tweets.OrderByDescending(o => o.Score).Take(numberTweets).ToList();
             GetOembed();
             return tweets;
         }
@@ -73,16 +74,14 @@ namespace PopularTweets.Services
             
         }
 
-        public void GetFavouriteRetweetCount()
+        public TweetModel GetFavouriteRetweetCount(TweetModel tweet)
         {
-            foreach (TweetModel tweet in tweets)
-            {
                 string tempUrl = string.Format("https://api.twitter.com/1.1/statuses/show/{0}.json", tweet.TweetID);
                 HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(tempUrl);
                 var timelineHeaderFormat = "{0} {1}";
                 timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, TwitterSingleton.Instance.tokenType, TwitterSingleton.Instance.accessToken));
                 timeLineRequest.Method = "Get";
-                WebResponse timeLineResponse = timeLineRequest.GetResponse();
+            WebResponse timeLineResponse = timeLineRequest.GetResponse();
                 var timeLineJson = string.Empty;
                 using (timeLineResponse)
                 {
@@ -92,11 +91,13 @@ namespace PopularTweets.Services
                         dynamic data = JObject.Parse(timeLineJson);
                         tweet.RetweetCount = data.retweet_count;
                         tweet.FavouriteCount = data.favorite_count;
+                        tweet.SetScore();
                     }
                 }
 
-            }
-
+            return tweet;
+                
         }
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿angular.module('PopularTweetsApp', [
-    'ngRoute', 'ngtweet',
+    'ngRoute',
   'PopularTweetsApp.Home'
 ]).
 config(['$routeProvider', function ($routeProvider) {
